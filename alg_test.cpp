@@ -5,6 +5,7 @@ using namespace std;
 
 
 #define M_PI 3.14f
+#define LIGHT_RADIUS 400
 
 
 struct Line
@@ -100,14 +101,19 @@ int main() {
 	Line q;
 	q.create(150, 50, 250, 100);
 
-	Object obj;
-	obj.add(400, 300);
-	obj.add(400, 315);
-	obj.add(375, 335);
-	obj.add(400, 350);
-	obj.add(450, 350);
-	obj.add(450, 300);
-	obj.add(425, 275);
+	vector<Object> objs(2);
+	objs[0].add(400, 300);
+	objs[0].add(400, 315);
+	objs[0].add(375, 335);
+	objs[0].add(400, 350);
+	objs[0].add(450, 350);
+	objs[0].add(450, 300);
+	objs[0].add(425, 275);
+
+	objs[1].add(550, 500);
+	objs[1].add(550, 700);
+	objs[1].add(750, 700);
+	objs[1].add(750, 500);
 
 	sf::CircleShape inter;
 	inter.setRadius(4);
@@ -124,28 +130,35 @@ int main() {
 		wnd.clear();
 
 		q.a = sf::Vector2f(sf::Mouse::getPosition(wnd));
-		//std::vector<sf::Vertex> varr;
-		//varr.push_back(sf::Vertex(q.a, sf::Color::White));
+		std::vector<sf::Vertex> varr;
+		varr.push_back(sf::Vertex(q.a, sf::Color::White));
 		for (float angle = 0; angle < 2 * M_PI; angle += 2 * M_PI / 32) {
-			q.b = sf::Vector2f(q.a.x + cos(angle)*300, q.a.y + sin(angle)*300);
+			sf::Vector2f resPos = q.b = sf::Vector2f(q.a.x + cos(angle) * LIGHT_RADIUS, q.a.y + sin(angle) * LIGHT_RADIUS);
 
-			sf::Vector2f interPos, resPos = q.b;
-			int cnt = obj.getLineCount();
-			for (int i = 0; i < cnt; i++)
-				if (doIntersect(q, obj.getLine(i), interPos))
-					if (length(q.a, resPos) > length(q.a, interPos))
-						resPos = interPos;
+			for (int j = 0; j < objs.size(); j++) {
+				sf::Vector2f interPos;
+				int cnt = objs[j].getLineCount();
+				for (int i = 0; i < cnt; i++)
+					if (doIntersect(q, objs[j].getLine(i), interPos))
+						if (length(q.a, resPos) > length(q.a, interPos))
+							resPos = interPos;
+			}
 			inter.setPosition(resPos);
 			q.b = resPos;
-			
-			//varr.push_back(resPos);
 
-			q.draw(wnd, sf::Color::Red);
-			wnd.draw(inter);
+			// RADIAL GRADIENT:
+			sf::Color resColor(255, 255, 255, 255 - length(q.a, q.b)*(255.0f / LIGHT_RADIUS));
+			varr.push_back(sf::Vertex(resPos, resColor));
+
+			//q.draw(wnd, sf::Color::Red);
+			//wnd.draw(inter);
 		}
-		//wnd.draw(&varr[0], varr.size(), sf::TrianglesFan);
+		varr.push_back(varr[1]);
+		wnd.draw(&varr[0], varr.size(), sf::TrianglesFan);
 
-		obj.draw(wnd);
+		for (int i = 0; i < objs.size(); i++)
+			objs[i].draw(wnd);
+
 		wnd.display();
 	}
 	return 0;
