@@ -124,14 +124,10 @@ int main() {
 	objs[1].add(750, 700);
 	objs[1].add(750, 500);
 
-	sf::CircleShape inter;
-	inter.setRadius(4);
-	inter.setOrigin(4, 4);
-
 	sf::Clock fpsClock;
-	float fps;
+	int fps;
 
-	char precisionMode = LIGHTDETAIL_MEDIUM;
+	char precisionMode = LIGHTDETAIL_HIGH;
 
 	while (wnd.isOpen()) {
 		while (wnd.pollEvent(event)) {
@@ -140,19 +136,17 @@ int main() {
 			else if (event.type == sf::Event::Resized)
 				wnd.setView(sf::View(sf::FloatRect(0, 0, event.size.width, event.size.height)));
 			else if (event.type == sf::Event::KeyPressed)
-				printf("FPS: %.3fs\n", fps);
+				printf("FPS: %d\n", fps);
 		}
 		
-		fps = fpsClock.restart().asMilliseconds() / 1000.0f;
-
-		wnd.clear();
+		fps = 1.f / fpsClock.restart().asSeconds();
 
 		q.a = sf::Vector2f(sf::Mouse::getPosition(wnd));
 		bool skipObject = false;
-		//std::vector<sf::Vertex> varr;
-		//varr.push_back(sf::Vertex(q.a, sf::Color::White));
+		std::vector<sf::Vertex> varr;
+		varr.push_back(sf::Vertex(q.a, sf::Color::White));
 		unordered_map<int, bool> highDefColObjs;
-		for (float angle = 0; angle < 2 * M_PI; angle += 2 * M_PI / 32) {
+		for (float angle = 0; angle < 2 * M_PI; angle += 2 * M_PI / 16) {
 			sf::Vector2f resPos = q.b = sf::Vector2f(q.a.x + cos(angle) * LIGHT_RADIUS, q.a.y + sin(angle) * LIGHT_RADIUS);
 
 			skipObject = false;
@@ -176,15 +170,9 @@ int main() {
 			if (skipObject && precisionMode == LIGHTDETAIL_MEDIUM)
 				continue;
 
-			inter.setPosition(resPos);
-			q.b = resPos;
-
 			// RADIAL GRADIENT:
-			//sf::Color resColor(255, 255, 255, 255 - length(q.a, q.b)*(255.0f / LIGHT_RADIUS));
-			//varr.push_back(sf::Vertex(resPos, resColor));
-
-			q.draw(wnd, sf::Color::Red);
-			wnd.draw(inter);
+			sf::Color resColor(255, 255, 255, 255 - length(q.a, resPos)*(255.0f / LIGHT_RADIUS));
+			varr.push_back(sf::Vertex(resPos, resColor));
 		}
 
 		if (precisionMode > LIGHTDETAIL_LOW) {
@@ -205,26 +193,29 @@ int main() {
 						q.b = sf::Vector2f(q.a.x + cos(angle) * LIGHT_RADIUS, q.a.y + sin(angle) * LIGHT_RADIUS);
 
 						sf::Vector2f interPos, resPos = q.b;
-						for (int k = 0; k < (int)obj->points.size(); k++) {
-							if (doIntersect(q, obj->getLine(k), interPos)) {
-								if (length(q.a, resPos) > length(q.a, interPos)) {
-									resPos = interPos;
-								}
-							}
-						}
+						for (int l = 0; l < objs.size(); l++)
+							for (int k = 0; k < (int)objs[l].points.size(); k++)
+								if (doIntersect(q, objs[l].getLine(k), interPos))
+									if (length(q.a, resPos) > length(q.a, interPos))
+										resPos = interPos;
 
-						q.b = resPos;
-
-						q.draw(wnd, sf::Color::Blue);
+						sf::Color resColor(255, 255, 255, 255 - length(q.a, resPos)*(255.0f / LIGHT_RADIUS));
+						varr.push_back(sf::Vertex(resPos, resColor));
 					}
 				}
 			}
 		}
+		
+		std::sort(varr.begin()+1, varr.end(), [=](sf::Vertex a, sf::Vertex b) {
+			return atan2(a.position.y - q.a.y, a.position.x - q.a.x) < atan2(b.position.y - q.a.y, b.position.x - q.a.x);
+		});
 
+		varr.push_back(varr[1]);
+		
 
-		//varr.push_back(varr[1]);
-		//wnd.draw(&varr[0], varr.size(), sf::TrianglesFan);
+		wnd.clear();
 
+		wnd.draw(&varr[0], varr.size(), sf::TrianglesFan);
 		for (int i = 0; i < objs.size(); i++)
 			objs[i].draw(wnd);
 
