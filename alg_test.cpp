@@ -89,12 +89,12 @@ bool doIntersect(Line l1, Line l2, sf::Vector2f& ret)
 	sf::Vector2f s = l2.b - q;
 
 	//p + T * r = q + U * s
-	float T = crossProduct((q - p), s) / crossProduct(r, s);
-	float U = crossProduct((q - p), r) / crossProduct(r, s);
+	float T = crossProduct(q - p, s) / crossProduct(r, s);
+	float U = crossProduct(q - p, r) / crossProduct(r, s);
 
 	// collinear
 	if (crossProduct(r, s) == 0 && crossProduct((q - p), r) == 0)
-		return false; // i guess i can ignore (for now) if two lines are collinear
+		return false; // i guess i an ignore (for now) if two lines are collinear
 	else if (crossProduct(r, s) != 0 && (T >= 0 && T <= 1) && (U >= 0 && U <= 1)) { // intersecting
 		ret = q + U*s;
 		return true; // pointOfIntersection = q + U*s;
@@ -131,7 +131,7 @@ int main() {
 	sf::Clock fpsClock;
 	float fps;
 
-	char precisionMode = LIGHTDETAIL_MEDIUM;
+	char precisionMode = LIGHTDETAIL_HIGH;
 
 	while (wnd.isOpen()) {
 		while (wnd.pollEvent(event)) {
@@ -197,24 +197,23 @@ int main() {
 						continue;
 
 					float newAngle = atan2(point.y - q.a.y, point.x - q.a.x);
-					printf("%.4f\n", newAngle);
-					// TODO: (newAngle - 0.01f) and (newAngle + 0.01f) cases
-					q.b = sf::Vector2f(q.a.x + cos(newAngle) * LIGHT_RADIUS, q.a.y + sin(newAngle) * LIGHT_RADIUS);
+					for (float angle = newAngle - 0.01f; angle <= newAngle + 0.01f; angle += 0.01f) {
 
-					sf::Vector2f interPos, resPos = q.b;
-					
-					//for (int k = std::max(i - 1, 0); k < std::min(i + 1, (int)obj->points.size()); k++) {
-					for (int k = 0; k < (int)obj->points.size(); k++) {
-						if (doIntersect(q, obj->getLine(k), interPos)) {
-							if (length(q.a, resPos) > length(q.a, interPos)) {
-								resPos = interPos;
+						q.b = sf::Vector2f(q.a.x + cos(angle) * LIGHT_RADIUS, q.a.y + sin(angle) * LIGHT_RADIUS);
+
+						sf::Vector2f interPos, resPos = q.b;
+						for (int k = 0; k < (int)obj->points.size(); k++) {
+							if (doIntersect(q, obj->getLine(k), interPos)) {
+								if (length(q.a, resPos) > length(q.a, interPos)) {
+									resPos = interPos;
+								}
 							}
 						}
+
+						q.b = resPos;
+
+						q.draw(wnd, sf::Color::Blue);
 					}
-
-					q.b = resPos;
-
-					q.draw(wnd, sf::Color::Blue);
 				}
 			}
 		}
