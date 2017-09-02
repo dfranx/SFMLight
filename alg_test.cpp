@@ -131,7 +131,7 @@ int main() {
 	sf::Clock fpsClock;
 	float fps;
 
-	char precisionMode = LIGHTDETAIL_HIGH;
+	char precisionMode = LIGHTDETAIL_MEDIUM;
 
 	while (wnd.isOpen()) {
 		while (wnd.pollEvent(event)) {
@@ -160,6 +160,9 @@ int main() {
 				sf::Vector2f interPos;
 				int cnt = objs[j].getLineCount();
 				for (int i = 0; i < cnt; i++) {
+					if (length(q.a, objs[j].points[i]) < LIGHT_RADIUS)
+						highDefColObjs[j] = true;
+
 					if (doIntersect(q, objs[j].getLine(i), interPos)) {
 						if (length(q.a, resPos) > length(q.a, interPos)) {
 							resPos = interPos;
