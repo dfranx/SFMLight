@@ -19,14 +19,17 @@ int main() {
 	rs.setSize(sf::Vector2f(100, 100));
 
 	sfl::LightScene scene;
+	scene.SetDebugDraw(true);
 	scene.Add(cs);
 	scene.Add(rs);
 
 	sfl::Light light;
+	light.SetOuterColor(sf::Color(255, 255, 255, 0));
 	light.SetDetailLevel(sfl::LightDetail::Medium);
 	light.SetRadius(300);
 	light.SetRayCount(24);
 	light.SetPosition(sf::Vector2f(550, 450));
+	light.SetDebugDraw(true);
 	scene.Update(light);
 
 	while (wnd.isOpen()) {

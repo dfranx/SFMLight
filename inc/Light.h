@@ -41,9 +41,13 @@ namespace sfl
 		inline void SetRayCount(int c) { m_rayCount = c; }
 		inline int GetRayCount() { return m_rayCount; }
 
+		inline void SetDebugDraw(bool deb) { m_debug = deb; }
+		inline bool GetDebugDraw() { return m_debug; }
+
 		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 	private:
+		bool m_debug;
 		sf::Vector2f m_pos;
 		std::vector<sf::Vertex> m_verts;
 		int m_radius, m_detail, m_rayCount;

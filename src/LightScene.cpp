@@ -7,6 +7,13 @@
 
 namespace sfl
 {
+	LightScene::LightScene()
+	{
+		m_debug = false;
+	}
+	LightScene::~LightScene()
+	{
+	}
 	void LightScene::Add(const sf::Shape & shp)
 	{
 		Object obj;
@@ -116,19 +123,21 @@ namespace sfl
 	
 	void LightScene::draw(sf::RenderTarget & target, sf::RenderStates states) const
 	{
-		std::vector<sf::Vertex> varr;
 
-		for (auto oit = m_objs.begin(); oit != m_objs.end(); oit++) {
-			varr.resize(oit->Points.size());
-			sf::Vertex* ver = &varr[0];
-			for (auto pit = oit->Points.begin(); pit != oit->Points.end(); pit++, ver++) {
-				ver->position = *pit;
-				ver->color = sf::Color::Green;
+		if (m_debug) {
+			std::vector<sf::Vertex> varr;
+
+			for (auto oit = m_objs.begin(); oit != m_objs.end(); oit++) {
+				varr.resize(oit->Points.size());
+				sf::Vertex* ver = &varr[0];
+				for (auto pit = oit->Points.begin(); pit != oit->Points.end(); pit++, ver++) {
+					ver->position = *pit;
+					ver->color = sf::Color::Green;
+				}
+
+				varr.push_back(sf::Vertex(oit->Points[0], sf::Color::Green));
+				target.draw(&varr[0], varr.size(), sf::LineStrip);
 			}
-
-			varr.push_back(sf::Vertex(oit->Points[0], sf::Color::Green));
-			target.draw(&varr[0], varr.size(), sf::LineStrip);
 		}
-
 	}
 }
