@@ -7,10 +7,11 @@
 #include <Object.h>
 #include <Light.h>
 #include <vector>
+#include <unordered_map>
 
 namespace sfl
 {
-	class LightScene : public sf::Drawable
+	class LightScene
 	{
 	public:
 		LightScene();
@@ -25,13 +26,17 @@ namespace sfl
 		inline void SetDebugDraw(bool deb) { m_debug = deb; }
 		inline bool GetDebugDraw() { return m_debug; }
 
+		inline void SetObjectDraw(bool drw) { m_dobj = drw; }
+		inline bool GetObjectDraw() { return m_dobj; }
+
 		void Update(sfl::Light& l);
 
-		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+		void Render(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default);
 
 	private:
-		bool m_debug;
+		bool m_debug, m_dobj;
 		std::vector<Object> m_objs;
+		std::unordered_map<int, bool> m_lit;
 	};
 }
 

@@ -18,7 +18,7 @@ namespace sfl
 	Light::~Light()
 	{
 	}
-	void Light::draw(sf::RenderTarget & tgt, sf::RenderStates states) const
+	void Light::Render(sf::RenderTarget & tgt, sf::RenderStates states)
 	{
 		tgt.draw(&m_verts[0], m_verts.size(), sf::TrianglesFan, states);
 

@@ -1,6 +1,5 @@
 #include <LightScene.h>
 #include <Utils.h>
-#include <unordered_map>
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -10,10 +9,13 @@ namespace sfl
 	LightScene::LightScene()
 	{
 		m_debug = false;
+		m_dobj = false;
 	}
+
 	LightScene::~LightScene()
 	{
 	}
+
 	void LightScene::Add(const sf::Shape & shp)
 	{
 		Object obj;
@@ -39,6 +41,9 @@ namespace sfl
 		varr.clear();
 		varr.push_back(sf::Vertex(ray.Start, light.GetInnerColor()));
 		
+		for (size_t i = 0; i < m_objs.size(); i++)
+			m_lit[i] = false;
+
 		// For every light detail
 		for (float angle = 0; angle < 2 * M_PI; angle += 2 * M_PI / light.GetRayCount()) {
 			sf::Vector2f resPos = ray.End = sf::Vector2f(ray.Start.x + cos(angle) * light.GetRadius(), ray.Start.y + sin(angle) * light.GetRadius());
@@ -56,6 +61,7 @@ namespace sfl
 						if (Utils::Length(ray.Start, resPos) > Utils::Length(ray.Start, interPos)) {
 							resPos = interPos;
 							highDefColObjs[i] = true;
+							m_lit[i] = true;
 						}
 						skipObject = true;
 					}
@@ -66,7 +72,7 @@ namespace sfl
 				continue;
 
 			sf::Color clr = light.GetOuterColor();
-			clr.a = 255-Utils::Length(ray.Start, resPos)*((255.0f-clr.a)/light.GetRadius()); // formula for to support radial gradient
+			clr.a = 255-Utils::Length(ray.Start, resPos)*((255.0f-clr.a)/light.GetRadius());
 			
 			varr.push_back(sf::Vertex(resPos, clr));
 		}
@@ -75,6 +81,7 @@ namespace sfl
 		// For medium and high light detail
 		if (light.GetDetailLevel() > LightDetail::Low) {
 			for (size_t i = 0; i < m_objs.size(); i++) {
+
 				if (!highDefColObjs[i])
 					continue;
 
@@ -92,21 +99,28 @@ namespace sfl
 					for (float angle = newAngle - 0.01f; angle <= newAngle + 0.01f; angle += 0.01f) {
 						ray.End = sf::Vector2f(ray.Start.x + cos(angle) * light.GetRadius(), ray.Start.y + sin(angle) * light.GetRadius());
 
+						int res = 0;
 						sf::Vector2f interPos, resPos = ray.End;
 						for (size_t k = 0; k < m_objs.size(); k++) {
 							Object* obj2 = &m_objs[k];
 							for (size_t l = 0; l < obj2->Points.size(); l++)
 								if (ray.Intersects(obj2->GetLine(l), interPos))
-									if (Utils::Length(ray.Start, resPos) > Utils::Length(ray.Start, interPos))
+									if (Utils::Length(ray.Start, resPos) > Utils::Length(ray.Start, interPos)) {
 										resPos = interPos;
+										res = k;
+									}
 						}
+
+						if (res == j)
+							m_lit[res] = true;
+
 
 						float tempLength = Utils::Length(ray.Start, resPos);
 						sf::Color clr = light.GetOuterColor();
-						clr.r = 255 - tempLength*((255.0f - clr.r) / light.GetRadius()); // formula for to support radial gradient
-						clr.g = 255 - tempLength*((255.0f - clr.g) / light.GetRadius()); // formula for to support radial gradient
-						clr.b = 255 - tempLength*((255.0f - clr.b) / light.GetRadius()); // formula for to support radial gradient
-						clr.a = 255 - tempLength*((255.0f - clr.a) / light.GetRadius()); // formula for to support radial gradient
+						clr.r = 255 - tempLength*((255.0f - clr.r) / light.GetRadius());
+						clr.g = 255 - tempLength*((255.0f - clr.g) / light.GetRadius());
+						clr.b = 255 - tempLength*((255.0f - clr.b) / light.GetRadius());
+						clr.a = 255 - tempLength*((255.0f - clr.a) / light.GetRadius());
 
 						varr.push_back(sf::Vertex(resPos, clr));
 					}
@@ -120,10 +134,9 @@ namespace sfl
 
 		varr.push_back(varr[1]);
 	}
-	
-	void LightScene::draw(sf::RenderTarget & target, sf::RenderStates states) const
-	{
 
+	void LightScene::Render(sf::RenderTarget & target, sf::RenderStates states)
+	{
 		if (m_debug) {
 			std::vector<sf::Vertex> varr;
 
@@ -137,6 +150,24 @@ namespace sfl
 
 				varr.push_back(sf::Vertex(oit->Points[0], sf::Color::Green));
 				target.draw(&varr[0], varr.size(), sf::LineStrip);
+			}
+		}
+		if (m_dobj) {
+			std::vector<sf::Vertex> varr;
+			for (size_t i = 0; i < m_objs.size(); i++) {
+				if (!m_lit[i])
+					continue;
+
+				Object* obj = &m_objs[i];
+				varr.resize(obj->Points.size());
+				sf::Vertex* ver = &varr[0];
+				for (auto pit = obj->Points.begin(); pit != obj->Points.end(); pit++, ver++) {
+					ver->position = *pit;
+					ver->color = sf::Color::White;
+				}
+
+				varr.push_back(sf::Vertex(obj->Points[0], sf::Color::White));
+				target.draw(&varr[0], varr.size(), sf::TriangleFan);
 			}
 		}
 	}

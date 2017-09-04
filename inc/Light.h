@@ -15,7 +15,7 @@ namespace sfl
 		const int High = 2;
 	}
 
-	class Light : public sf::Drawable
+	class Light
 	{
 	public:
 		Light();
@@ -44,7 +44,7 @@ namespace sfl
 		inline void SetDebugDraw(bool deb) { m_debug = deb; }
 		inline bool GetDebugDraw() { return m_debug; }
 
-		virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+		void Render(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default);
 
 	private:
 		bool m_debug;

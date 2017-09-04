@@ -20,6 +20,7 @@ int main() {
 
 	sfl::LightScene scene;
 	scene.SetDebugDraw(true);
+	scene.SetObjectDraw(true);
 	scene.Add(cs);
 	scene.Add(rs);
 
@@ -28,9 +29,7 @@ int main() {
 	light.SetDetailLevel(sfl::LightDetail::Medium);
 	light.SetRadius(300);
 	light.SetRayCount(24);
-	light.SetPosition(sf::Vector2f(550, 450));
 	light.SetDebugDraw(true);
-	scene.Update(light);
 
 	while (wnd.isOpen()) {
 		while (wnd.pollEvent(event)) {
@@ -40,11 +39,13 @@ int main() {
 				wnd.setView(sf::View(sf::FloatRect(0, 0, event.size.width, event.size.height)));
 		}
 
+		light.SetPosition(sf::Vector2f(sf::Mouse::getPosition(wnd)));
+		scene.Update(light);
 
 		wnd.clear();
 		
-		wnd.draw(light);
-		wnd.draw(scene);
+		light.Render(wnd);
+		scene.Render(wnd);
 
 		wnd.display();
 	}
