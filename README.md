@@ -11,15 +11,11 @@ Include necessary file
 #include <SFMLight.h>
 ```
 
-&nbsp;
-
 Declare a scene instance
 ```c++
 sfl::LightScene scene;
 scene.SetDebugDraw(true); // just for debugging
 ```
-
-&nbsp;
 
 Declare an object/obstacle and its boundaries
 ```c++
@@ -30,14 +26,10 @@ obj.Add(100, 100);
 obj.Add(50, 100);
 ```
 
-&nbsp;
-
 Add the object to the scene
 ```c++
 scene.Add(obj);
 ```
-
-&nbsp;
 
 Create a light and define some of its properties
 ```c++
@@ -46,14 +38,10 @@ light.SetRadius(300);
 light.SetPosition(sf::Vector2f(150, 150));
 ```
 
-&nbsp;
-
 Update light's vertices
 ```c++
 scene.Update(light);
 ```
-
-&nbsp;
 
 Render everything
 ```c++
@@ -61,11 +49,11 @@ light.Render(window);
 scene.Render(window);
 ```
 
-&nbsp;
-
 Result:
 
 ![test](https://i.imgur.com/eEVs1hD.png?1)
+
+&nbsp;
 
 ## Building
 [COMING SOON]
