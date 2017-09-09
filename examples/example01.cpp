@@ -3,11 +3,10 @@
 #include <Light.h>
 #include <iostream>
 
-
 using namespace std;
 
 int main() {
-	sf::RenderWindow wnd(sf::VideoMode(800, 600), "Intersection");
+	sf::RenderWindow wnd(sf::VideoMode(800, 600), "Light example");
 	sf::Event event;
 
 	sf::CircleShape cs;
@@ -43,7 +42,7 @@ int main() {
 		scene.Update(light);
 
 		wnd.clear();
-		
+
 		light.Render(wnd);
 		scene.Render(wnd);
 
