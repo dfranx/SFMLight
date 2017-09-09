@@ -1,5 +1,5 @@
-#include <LightScene.h>
-#include <Utils.h>
+#include <sfl/LightScene.h>
+#include <sfl/Utils.h>
 
 #define _USE_MATH_DEFINES
 #include <math.h>

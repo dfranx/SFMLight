@@ -1,6 +1,5 @@
 #include <SFML/Graphics.hpp>
-#include <LightScene.h>
-#include <Light.h>
+#include <SFMLight.h>
 #include <iostream>
 
 using namespace std;

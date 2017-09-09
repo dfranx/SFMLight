@@ -4,8 +4,8 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Shape.hpp>
-#include <Object.h>
-#include <Light.h>
+#include <sfl/Object.h>
+#include <sfl/Light.h>
 #include <vector>
 #include <unordered_map>
 

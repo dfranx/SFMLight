@@ -1,4 +1,4 @@
-#include <Light.h>
+#include <sfl/Light.h>
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>

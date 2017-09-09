@@ -1,7 +1,7 @@
 #ifndef __OBJECT_H__
 #define __OBJECT_H__
 
-#include <Line.h>
+#include <sfl/Line.h>
 #include <vector>
 
 namespace sfl
