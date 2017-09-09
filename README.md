@@ -1,6 +1,9 @@
 # SFMLight
 A simple library for adding lights to your 2D game.
+
 ![example](https://i.imgur.com/Cn0rHCl.png?1)
+
+&nbsp;
 
 ## How to use this library
 Include necessary file
@@ -61,6 +64,7 @@ scene.Render(window);
 &nbsp;
 
 Result:
+
 ![test](https://i.imgur.com/eEVs1hD.png?1)
 
 ## Building
