@@ -1,8 +1,5 @@
 #include <SFML/Graphics.hpp>
 #include <SFMLight.h>
-#include <iostream>
-
-using namespace std;
 
 int main() {
 	sf::RenderWindow wnd(sf::VideoMode(800, 600), "Light example");

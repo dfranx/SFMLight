@@ -12,7 +12,7 @@ namespace sfl
 		m_rayCount = 24;
 		m_detail = LightDetail::Medium;
 		m_inClr = sf::Color::White;
-		m_outClr = sf::Color::White;
+		m_outClr = sf::Color(255, 255, 255, 0);
 		m_debug = false;
 	}
 	Light::~Light()

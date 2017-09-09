@@ -11,6 +11,10 @@ namespace sfl
 	public:
 		std::vector<sf::Vector2f> Points;
 
+		inline void Add(sf::Vector2f vec) {
+			Points.push_back(vec);
+		}
+
 		inline void Add(float x, float y) {
 			Points.push_back(sf::Vector2f(x, y));
 		}
