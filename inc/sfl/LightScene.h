@@ -34,6 +34,10 @@ namespace sfl
 		inline void SetObjectDraw(bool drw) { m_dobj = drw; }
 		inline bool GetObjectDraw() { return m_dobj; }
 
+		// should we apply distance to lit objects
+		void SetObjectDistance(bool drw);
+		inline bool GetObjectDistance() { return m_ldist; }
+
 		/////////////////////////////////////////////////////////
 		// save the list of lit objects
 		/////////////////////////////////////////////////////////
@@ -50,10 +54,12 @@ namespace sfl
 		void Render(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default);
 
 	private:
-		bool m_debug, m_dobj;			// m_debug -> should we draw object outlines? m_dobj -> should we draw lit objects?
-		std::vector<Object> m_objs;		// list of all objects in the scene
-		std::vector<bool> m_lit;		// contains info whether the object is lit or not
-		std::vector<bool> m_cachedLit;	// contains info whether the object is lit or not
+		bool m_debug, m_dobj, m_ldist;		// m_debug -> should we draw object outlines? m_dobj -> should we draw lit objects? m_ldist -> should we take distance from light in account
+		std::vector<Object> m_objs;			// list of all objects in the scene
+		std::vector<bool> m_lit;			// contains info whether the object is lit or not
+		std::vector<bool> m_cachedLit;		// contains info whether the object is lit or not
+		std::vector<float> m_litDistance;	// distance from light
+		std::vector<float> m_cachedDistance;// distance from light
 
 		// cache all concave shapes
 		std::vector<sf::VertexArray> m_cachedObjs;

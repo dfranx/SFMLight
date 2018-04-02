@@ -53,10 +53,24 @@ namespace sfl
 	{
 		m_debug = false;
 		m_dobj = false;
+		m_ldist = false;
 	}
 
 	LightScene::~LightScene()
 	{
+	}
+
+	void LightScene::SetObjectDistance(bool drw)
+	{
+		m_ldist = drw;
+
+		if (!drw) {
+			for (size_t i = 0; i < m_objs.size(); i++) {
+				sf::VertexArray& varr = m_cachedObjs[i];
+				for (size_t j = 0; j < varr.getVertexCount(); j++)
+					varr[j].color.a = 255;
+			}
+		}
 	}
 
 	void LightScene::Add(const sfl::Object& obj)
@@ -64,6 +78,8 @@ namespace sfl
 		m_objs.push_back(obj);
 		m_lit.push_back(false);
 		m_cachedLit.push_back(false);
+		m_litDistance.push_back(1);
+		m_cachedDistance.push_back(1);
 		m_cachedObjs.push_back(sf::VertexArray(sf::PrimitiveType::Triangles));
 
 		sf::VertexArray& varr = m_cachedObjs[m_cachedObjs.size()-1];
@@ -88,8 +104,10 @@ namespace sfl
 		Update(l);
 
 		for (size_t i = 0; i < m_lit.size(); i++)
-			if (m_lit[i])
+			if (m_lit[i]) {
 				m_cachedLit[i] = true;
+				m_cachedDistance[i] = m_litDistance[i];
+			}
 	}
 
 	void LightScene::Update(sfl::Light& light)
@@ -111,8 +129,11 @@ namespace sfl
 		varr.push_back(sf::Vertex(ray.Start, light.GetInnerColor()));
 		
 		// reset the lit objects
-		for (size_t i = 0; i < m_lit.size(); i++)
+		for (size_t i = 0; i < m_lit.size(); i++) {
 			m_lit[i] = false;
+
+			m_litDistance[i] = m_cachedDistance[i];
+		}
 
 		// For every light detail
 		for (float angle = 0; angle < 2 * M_PI; angle += angleStep) {
@@ -130,6 +151,10 @@ namespace sfl
 
 				for (size_t j = 0; j < obj->GetLineCount(); j++) {	// go through object's edges
 					sfl::Line edge = obj->GetLine(j);
+
+					// get object's distance
+					if (m_ldist)
+						m_litDistance[i] = std::min(m_litDistance[i], std::min(Utils::Length(ray.Start, edge.Start), Utils::Length(ray.Start, edge.End)) / light.GetRadius());
 
 					// check if edge is inside of the lights radius
 					if (Utils::Length(ray.Start, edge.Start) < light.GetRadius() || Utils::Length(ray.Start, edge.End) < light.GetRadius())
@@ -272,6 +297,12 @@ namespace sfl
 			for (size_t i = 0; i < m_cachedObjs.size(); i++) {
 				if (!m_lit[i] && !m_cachedLit[i])
 					continue;
+
+				if (m_ldist) {
+					sf::VertexArray& varr = m_cachedObjs[i];
+					for (size_t j = 0; j < varr.getVertexCount(); j++)
+						varr[j].color.a = (1-m_litDistance[i]) * 255;
+				}
 
 				target.draw(m_cachedObjs[i]);
 			}

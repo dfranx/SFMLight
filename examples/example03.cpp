@@ -143,6 +143,8 @@ int main() {
 					for (size_t i = 0; i < lights.size(); i++)
 						lights[i].SetDebugDraw(!lights[i].GetDebugDraw());
 				}
+				else if (event.key.code == sf::Keyboard::E)
+					scene.SetObjectDistance(!scene.GetObjectDistance());
 				else if (event.key.code == sf::Keyboard::A) {
 					sf::Color clr = light.GetOuterColor();
 					if (clr.a == 255)
@@ -181,7 +183,7 @@ int main() {
 		}
 
 		std::stringstream ss;
-		ss << "Left click to place a light\nLayer: " << layer << " [F1 & F2]\nRadius: " << light.GetRadius() << " [Wheel]\nRay count: " << light.GetRayCount() << " [Shift + Wheel]\nLevel detail: " << light.GetDetailLevel() << " [W & S]\nDebug draw: " << light.GetDebugDraw() << " [D]\nOuter color alpha: " << (int)light.GetOuterColor().a << " [A]\nMy colored light [M]\nRandom colored light [R]\nComplete darkness: " << dark << " [Q]\nDraw lit objects: " << scene.GetObjectDraw() << " [L]\nUI: " << drawUI << " [I]";
+		ss << "Left click to place a light\nLayer: " << layer << " [F1 & F2]\nRadius: " << light.GetRadius() << " [Wheel]\nRay count: " << light.GetRayCount() << " [Shift + Wheel]\nLevel detail: " << light.GetDetailLevel() << " [W & S]\nDebug draw: " << light.GetDebugDraw() << " [D]\nOuter color alpha: " << (int)light.GetOuterColor().a << " [A]\nMy colored light [M]\nRandom colored light [R]\nComplete darkness: " << dark << " [Q]\nDraw lit objects: " << scene.GetObjectDraw() << " [L]\nApply distance to lit objects: " << scene.GetObjectDistance() <<" [E]\nUI: " << drawUI << " [I]";
 		text.setString(ss.str());
 		
 		light.SetPosition(sf::Vector2f(sf::Mouse::getPosition(wnd)));
