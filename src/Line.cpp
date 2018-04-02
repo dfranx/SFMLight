@@ -14,7 +14,7 @@ namespace sfl
 		float T = Utils::CrossProduct(q - p, s) / Utils::CrossProduct(r, s);
 		float U = Utils::CrossProduct(q - p, r) / Utils::CrossProduct(r, s);
 
-		if (Utils::CrossProduct(r, s) != 0 && (T >= 0 && T <= 1) && (U >= 0 && U <= 1)) { // intersecting
+		if (Utils::CrossProduct(r, s) != 0 && (T >= 0 && T <= 1) && (U >= 0 && U <= 1)) {
 			ret = q + U*s;
 			return true;
 		}

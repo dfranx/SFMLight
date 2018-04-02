@@ -1,5 +1,5 @@
-#ifndef __UTILS_H__
-#define __UTILS_H__
+#ifndef __SFMLIGHT_UTILS_H__
+#define __SFMLIGHT_UTILS_H__
 
 #include <SFML/System/Vector2.hpp>
 #include <math.h>
@@ -18,4 +18,4 @@ namespace sfl
 	}
 }
 
-#endif // __UTILS_H__
+#endif // __SFMLIGHT_UTILS_H__

@@ -7,6 +7,7 @@ namespace sfl
 {
 	Light::Light()
 	{
+		// some default values
 		SetPosition(0, 0);
 		m_radius = 300;
 		m_rayCount = 24;
@@ -20,9 +21,10 @@ namespace sfl
 	}
 	void Light::Render(sf::RenderTarget & tgt, sf::RenderStates states)
 	{
+		// draw the light
 		tgt.draw(&m_verts[0], m_verts.size(), sf::TrianglesFan, states);
 
-		if (m_debug) {
+		if (m_debug) { // should we draw rays?
 			std::vector<sf::Vertex> arr((m_verts.size() - 2)*2);
 			for (size_t i = 0; i < arr.size(); i+=2) {
 				arr[i].position = m_verts[0].position;

@@ -1,23 +1,52 @@
 # SFMLight
-A simple library for adding lights to your 2D game.
+SFMLight is a simple to use library that adds lighting to your 2D game. It has
+decent number of options to play with and has amazing performance.
 
+
+## Screenshots
 ![example](https://i.imgur.com/Cn0rHCl.png?1)
 
-&nbsp;
 
-## How to use this library
-Include necessary file
+## Getting started
+These steps will show you how to build SFMLight on your machine.
+
+### Dependencies
+This project uses:
+* [SFML](https://www.sfml-dev.org/download.php)
+* [Thor](http://www.bromeon.ch/libraries/thor/)
+
+### Building
+First, get the SFMLight source code
+```
+git clone https://github.com/GeneralNote/SFMLight.git SFMLight
+cd SFMLight
+```
+
+Then build it
+```
+cmake .
+make
+```
+
+If you get error message which says that SFML/Thor was not found on your computer you
+need to specify SFML_ROOT/THOR_ROOT variable in your cmake command:
+```
+cmake -DSFML_ROOT=path/to/your/sfml -DTHOR_ROOT=path/to/your/thor .
+```
+
+## Usage
+Include the library
 ```c++
 #include <SFMLight.h>
 ```
 
-Declare a scene instance
+Declare a LightScene
 ```c++
 sfl::LightScene scene;
 scene.SetDebugDraw(true); // just for debugging
 ```
 
-Declare an object/obstacle and its boundaries
+Declare an object/obstacle and define it's boundaries
 ```c++
 sfl::Object obj;
 obj.Add(50, 50);
@@ -31,7 +60,7 @@ Add the object to the scene
 scene.Add(obj);
 ```
 
-Create a light and define some of its properties
+Create a light and define some of its properties (radius and position)
 ```c++
 sfl::Light light;
 light.SetRadius(300);
@@ -53,7 +82,5 @@ Result:
 
 ![test](https://i.imgur.com/eEVs1hD.png?1)
 
-&nbsp;
-
-## Building
-[COMING SOON]
+## License
+This project is licensed under the MIT License - see the LICENSE.md file for details

@@ -14,7 +14,7 @@ int main() {
 
 #pragma region TRUCK
 	sf::Texture truckTex;
-	truckTex.loadFromFile("examples/data/truck.png");
+	truckTex.loadFromFile("data/truck.png");
 
 	sf::Sprite truckSpr;
 	truckSpr.setTexture(truckTex);
@@ -46,7 +46,7 @@ int main() {
 
 #pragma region GRASS
 	sf::Texture grassTex;
-	grassTex.loadFromFile("examples/data/grass.png");
+	grassTex.loadFromFile("data/grass.png");
 
 	sf::Sprite grassSpr;
 	grassSpr.setTexture(grassTex);
@@ -54,7 +54,7 @@ int main() {
 
 #pragma region BOXES
 	sf::Texture boxTex;
-	boxTex.loadFromFile("examples/data/crate.png");
+	boxTex.loadFromFile("data/crate.png");
 
 	sf::Sprite boxSpr;
 	boxSpr.setTexture(boxTex);
@@ -76,7 +76,7 @@ int main() {
 
 #pragma region BARRELS
 	sf::Texture barrelTex;
-	barrelTex.loadFromFile("examples/data/barrel.png");
+	barrelTex.loadFromFile("data/barrel.png");
 
 	sf::Sprite barrelSpr;
 	barrelSpr.setTexture(barrelTex);

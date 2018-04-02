@@ -1,15 +1,16 @@
-#ifndef __OBJECT_H__
-#define __OBJECT_H__
+#ifndef __SFMLIGHT_OBJECT_H__
+#define __SFMLIGHT_OBJECT_H__
 
+#include <sfl/Config.h>
 #include <sfl/Line.h>
 #include <vector>
 
 namespace sfl
 {
-	class Object
+	class SFMLIGHT_EXPORT Object
 	{
 	public:
-		std::vector<sf::Vector2f> Points;
+		std::vector<sf::Vector2f> Points;	// list of points that represent this object
 
 		inline void Add(sf::Vector2f vec) {
 			Points.push_back(vec);
@@ -23,8 +24,11 @@ namespace sfl
 			return Points.size();
 		}
 
+		/////////////////////////////////////////////////////////
+		// get line at given index
+		/////////////////////////////////////////////////////////
 		Line GetLine(int index);
 	};
 }
 
-#endif //__OBJECT_H__
+#endif //__SFMLIGHT_OBJECT_H__

@@ -19,7 +19,7 @@ int main() {
 	
 #pragma region TRUCK
 	sf::Texture truckTex;
-	truckTex.loadFromFile("examples/data/truck.png");
+	truckTex.loadFromFile("data/truck.png");
 
 	sf::Sprite truckSpr;
 	truckSpr.setTexture(truckTex);
@@ -51,7 +51,7 @@ int main() {
 
 #pragma region GRASS
 	sf::Texture grassTex;
-	grassTex.loadFromFile("examples/data/grass.png");
+	grassTex.loadFromFile("data/grass.png");
 
 	sf::Sprite grassSpr;
 	grassSpr.setTexture(grassTex);
@@ -59,7 +59,7 @@ int main() {
 
 #pragma region BOXES
 	sf::Texture boxTex;
-	boxTex.loadFromFile("examples/data/crate.png");
+	boxTex.loadFromFile("data/crate.png");
 
 	sf::Sprite boxSpr;
 	boxSpr.setTexture(boxTex);
@@ -81,7 +81,7 @@ int main() {
 
 #pragma region BARRELS
 	sf::Texture barrelTex;
-	barrelTex.loadFromFile("examples/data/barrel.png");
+	barrelTex.loadFromFile("data/barrel.png");
 
 	sf::Sprite barrelSpr;
 	barrelSpr.setTexture(barrelTex);
@@ -102,7 +102,7 @@ int main() {
 
 #pragma region TEXT
 	sf::Font font;
-	font.loadFromFile("examples/data/arial.ttf");
+	font.loadFromFile("data/arial.ttf");
 
 	sf::Text text;
 	text.setFont(font);
@@ -123,6 +123,8 @@ int main() {
 	int layer = 0;
 	bool drawUI = true, dark = false;
 
+	srand(time(0));
+
 	while (wnd.isOpen()) {
 		while (wnd.pollEvent(event)) {
 			if (event.type == sf::Event::Closed)
@@ -137,6 +139,9 @@ int main() {
 				else if (event.key.code == sf::Keyboard::D) {
 					light.SetDebugDraw(!light.GetDebugDraw());
 					scene.SetDebugDraw(light.GetDebugDraw());
+
+					for (size_t i = 0; i < lights.size(); i++)
+						lights[i].SetDebugDraw(!lights[i].GetDebugDraw());
 				}
 				else if (event.key.code == sf::Keyboard::A) {
 					sf::Color clr = light.GetOuterColor();
@@ -144,6 +149,19 @@ int main() {
 						clr.a = 0;
 					else clr.a = 255;
 					light.SetOuterColor(clr);
+				}
+				else if (event.key.code == sf::Keyboard::R) {
+					sf::Color clrIn = sf::Color(rand() % 255, rand() % 255, rand() % 255, light.GetInnerColor().a);
+					sf::Color clrOut = sf::Color(rand() % 255, rand() % 255, rand() % 255, light.GetOuterColor().a);
+					light.SetOuterColor(clrOut);
+					light.SetInnerColor(clrIn);
+				}
+				else if (event.key.code == sf::Keyboard::M) {
+					sf::Color clrIn = sf::Color(255, 0, 0, 255);
+					sf::Color clrOut = sf::Color(0, 0, 255, 25);
+					light.SetOuterColor(clrOut);
+					light.SetInnerColor(clrIn);
+					dark = true;
 				}
 				else if (event.key.code == sf::Keyboard::I)
 					drawUI = !drawUI;
@@ -157,17 +175,17 @@ int main() {
 				else if (light.GetRadius() >= 50)
 					light.SetRadius(std::max(50, light.GetRadius() + (int)event.mouseWheelScroll.delta * 4));
 			} else if (event.type == sf::Event::MouseButtonReleased) {
+				scene.Cache(light);
 				lights.push_back(light);
 			}
 		}
 
 		std::stringstream ss;
-		ss << "Left click to place a light\nLayer: " << layer << " [F1 & F2]\nRadius: " << light.GetRadius() << " [Wheel]\nRay count: " << light.GetRayCount() << " [Shift + Wheel]\nLevel detail: " << light.GetDetailLevel() << " [W & S]\nDebug draw: " << light.GetDebugDraw() << " [D]\nOuter color alpha: " << (int)light.GetOuterColor().a << " [A]\nComplete darkness: " << dark << " [Q]\n{BUGGY} Draw lit objects: " << scene.GetObjectDraw() << " [L]\nUI: " << drawUI << " [I]";
+		ss << "Left click to place a light\nLayer: " << layer << " [F1 & F2]\nRadius: " << light.GetRadius() << " [Wheel]\nRay count: " << light.GetRayCount() << " [Shift + Wheel]\nLevel detail: " << light.GetDetailLevel() << " [W & S]\nDebug draw: " << light.GetDebugDraw() << " [D]\nOuter color alpha: " << (int)light.GetOuterColor().a << " [A]\nMy colored light [M]\nRandom colored light [R]\nComplete darkness: " << dark << " [Q]\nDraw lit objects: " << scene.GetObjectDraw() << " [L]\nUI: " << drawUI << " [I]";
 		text.setString(ss.str());
 		
 		light.SetPosition(sf::Vector2f(sf::Mouse::getPosition(wnd)));
 		scene.Update(light);
-
 
 
 		blendRT.clear(dark ? sf::Color(0, 0, 0) : sf::Color(90, 90, 90));

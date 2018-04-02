@@ -1,21 +1,22 @@
-#ifndef __LIGHT_H__
-#define __LIGHT_H__
+#ifndef __SFMLIGHT_LIGHT_H__
+#define __SFMLIGHT_LIGHT_H__
 
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Vertex.hpp>
 #include <SFML/System/Vector2.hpp>
+#include <sfl/Config.h>
 #include <vector>
 
 namespace sfl
 {
 	namespace LightDetail
 	{
-		const int Low = 0;
-		const int Medium = 1;
-		const int High = 2;
+		const int Low = 0;		// doesnt care about object's points
+		const int Medium = 1;	// casts 2 rays per object's point + doesnt cast rays that collide with objects
+		const int High = 2;		// casts 3 rays per object's point
 	}
 
-	class Light
+	class SFMLIGHT_EXPORT Light
 	{
 	public:
 		Light();
@@ -44,14 +45,17 @@ namespace sfl
 		inline void SetDebugDraw(bool deb) { m_debug = deb; }
 		inline bool GetDebugDraw() { return m_debug; }
 
+		/////////////////////////////////////////////////////////
+		// render the light to a sf::RenderTarget
+		/////////////////////////////////////////////////////////
 		void Render(sf::RenderTarget& target, sf::RenderStates states = sf::RenderStates::Default);
 
 	private:
-		bool m_debug;
-		sf::Vector2f m_pos;
-		std::vector<sf::Vertex> m_verts;
-		int m_radius, m_detail, m_rayCount;
-		sf::Color m_inClr, m_outClr;
+		bool m_debug;						// should we draw rays
+		sf::Vector2f m_pos;					// light position
+		std::vector<sf::Vertex> m_verts;	// light vertices
+		int m_radius, m_detail, m_rayCount;	// radius of the light, detail level and number of rays
+		sf::Color m_inClr, m_outClr;		// outer and inner color of a light
 	};
 }
-#endif //__LIGHT_H__
+#endif //__SFMLIGHT_LIGHT_H__
