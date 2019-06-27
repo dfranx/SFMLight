@@ -1,6 +1,5 @@
 # SFMLight
-SFMLight is a simple to use library that adds lighting to your 2D game. It has
-decent number of options to play with and has amazing performance.
+SFMLight is a simple to use library that can be used to add lighting to your 2D game.
 
 
 ## Screenshots
@@ -13,12 +12,11 @@ These steps will show you how to build SFMLight on your machine.
 ### Dependencies
 This project uses:
 * [SFML](https://www.sfml-dev.org/download.php)
-* [Thor](http://www.bromeon.ch/libraries/thor/)
 
 ### Building
 First, get the SFMLight source code
 ```
-git clone https://github.com/GeneralNote/SFMLight.git SFMLight
+git clone https://github.com/dfranx/SFMLight.git SFMLight
 cd SFMLight
 ```
 
@@ -28,10 +26,10 @@ cmake .
 make
 ```
 
-If you get error message which says that SFML/Thor was not found on your computer you
-need to specify SFML_ROOT/THOR_ROOT variable in your cmake command:
+If you get error message which says that SFML was not found on your computer you
+need to specify SFML_ROOT variable in your cmake command:
 ```
-cmake -DSFML_ROOT=path/to/your/sfml -DTHOR_ROOT=path/to/your/thor .
+cmake -DSFML_ROOT=path/to/your/sfml .
 ```
 
 ## Usage
@@ -83,4 +81,4 @@ Result:
 ![test](https://i.imgur.com/eEVs1hD.png?1)
 
 ## License
-This project is licensed under the MIT License - see the LICENSE.md file for details
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details

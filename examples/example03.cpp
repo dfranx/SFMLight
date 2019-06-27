@@ -102,12 +102,12 @@ int main() {
 
 #pragma region TEXT
 	sf::Font font;
-	font.loadFromFile("data/arial.ttf");
+	font.loadFromFile("data/BebasNeue.ttf");
 
 	sf::Text text;
 	text.setFont(font);
 	text.setPosition(10, 10);
-	text.setCharacterSize(14);
+	text.setCharacterSize(18);
 	text.setFillColor(sf::Color::White);
 #pragma endregion
 

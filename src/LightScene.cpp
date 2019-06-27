@@ -1,54 +1,11 @@
 #include <sfl/LightScene.h>
 #include <sfl/Utils.h>
-#include <Thor/Math/Triangulation.hpp>
-#include <Thor/Shapes/ConcaveShape.hpp>
 
 #define _USE_MATH_DEFINES
 #include <math.h>
 
 namespace sfl
 {
-	struct TriangleGenerator
-	{
-		TriangleGenerator(sf::VertexArray& triangleVertices, const sf::Color& color)
-			: triangleVertices(&triangleVertices)
-			, color(color)
-		{
-			triangleVertices.clear();
-		}
-		
-		// Fake dereferencing
-		TriangleGenerator& operator* ()
-		{
-			return *this;
-		}
-		
-		// Fake pre-increment
-		TriangleGenerator& operator++ ()
-		{
-			return *this;
-		}
-		
-		// Fake post-increment
-		TriangleGenerator& operator++ (int)
-		{
-			return *this;
-		}
-		
-		// Assignment from triangle
-		TriangleGenerator& operator= (const thor::Triangle<const sf::Vector2f>& triangle)
-		{
-			triangleVertices->append(sf::Vertex(triangle[0], color));
-			triangleVertices->append(sf::Vertex(triangle[1], color));
-			triangleVertices->append(sf::Vertex(triangle[2], color));
-			
-			return *this;
-		}
-		
-		sf::VertexArray*	triangleVertices;
-		sf::Color			color;
-	};
-
 	LightScene::LightScene()
 	{
 		m_debug = false;
@@ -81,10 +38,6 @@ namespace sfl
 		m_litDistance.push_back(1);
 		m_cachedDistance.push_back(1);
 		m_cachedObjs.push_back(sf::VertexArray(sf::PrimitiveType::Triangles));
-
-		sf::VertexArray& varr = m_cachedObjs[m_cachedObjs.size()-1];
-
-		thor::triangulatePolygon(obj.Points.begin(), obj.Points.end(), TriangleGenerator(varr, sf::Color::White));
 	}
 
 	void LightScene::Add(const sf::Shape& shp)
